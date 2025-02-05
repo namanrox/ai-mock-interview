@@ -11,15 +11,72 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { chatSession } from "@/utils/GeminiAIModel";
+import { LoaderCircle } from "lucide-react";
+import { MockInterview } from "@/utils/schema";
+import { db } from "@/utils/db";
+import { v4 as uuidv4 } from "uuid";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState();
   const [jobDesc, setJobDesc] = useState();
   const [jobExperience, setJobExperience] = useState();
-  const onSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [jsonResponse, setJsonResponse] = useState([]);
+
+  const { user } = useUser();
+
+  const onSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     console.log(jobPosition, jobDesc, jobExperience);
+
+    const InputPrompt =
+      "Job position: " +
+      jobPosition +
+      ", Job Description: " +
+      jobDesc +
+      "Years of Experience: " +
+      jobExperience +
+      " Based on this information, please give me" +
+      process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
+      " interview Questions and Answers in JSON format. Give Question and Answers as field in JSON";
+
+    const result = await chatSession.sendMessage(InputPrompt);
+
+    const MockJsonResp = result.response
+      .text()
+      .replace("```json", "")
+      .replace("```", "");
+    console.log(JSON.parse(MockJsonResp));
+    setJsonResponse(MockJsonResp);
+
+    if (MockJsonResp) {
+      const resp = await db
+        .insert(MockInterview)
+        .values({
+          mockId: uuidv4(),
+          jsonMockResp: MockJsonResp,
+          jobPosition: jobPosition,
+          jobDesc: jobDesc,
+          jobExperience: jobExperience,
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+          createdAt: moment().format("DD-MM-yyyy"),
+        })
+        .returning({ mockId: MockInterview.mockId });
+
+      console.log("Inserted ID:", resp);
+      if (resp) {
+        setOpenDialog(false);
+      }
+    } else {
+      console.log("ERROR");
+    }
+
+    setLoading(false);
   };
   return (
     <div>
@@ -77,7 +134,16 @@ function AddNewInterview() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit">Start Interview</Button>
+                  <Button type="submit" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <LoaderCircle className="animate-spin" />
+                        'Generating from AI'
+                      </>
+                    ) : (
+                      "Start Interview"
+                    )}
+                  </Button>
                 </div>
               </form>
             </DialogDescription>
