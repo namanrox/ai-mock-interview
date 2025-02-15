@@ -27,7 +27,7 @@ function Header() {
           className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
             path == "/questions" && "text-primary font-bold"
           }`}
-          onClick={() => router.replace("/questions")}
+          onClick={() => router.replace("/")}
         >
           Questions
         </li>
@@ -43,7 +43,7 @@ function Header() {
           className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
             path == "/how_it_works" && "text-primary font-bold"
           }`}
-          onClick={() => router.replace("/how_it_works")}
+          onClick={() => router.replace("/")}
         >
           How it Works?
         </li>
