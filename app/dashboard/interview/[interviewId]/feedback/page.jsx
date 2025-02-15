@@ -58,7 +58,7 @@ function Feedback({ params }) {
           </h2>
 
           <h2 className="text-sm text-gray-500">
-            Find below interview questions with correct answer, Your answer and
+            Find below interview questions with correct answer, your answer and
             feedback for improvement
           </h2>
           {feedbackList &&
