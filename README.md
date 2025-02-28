@@ -32,6 +32,14 @@ The AI Mock Interview app leverages modern web technologies to offer a comprehen
 
 Experience the live demo of the application on Vercel: [AI Mock Interview Demo](https://ai-mock-interview-one-nu.vercel.app)
 
+## Reference Images
+
+![image](https://github.com/user-attachments/assets/6147eff4-769d-4ece-8369-ce84e3302806)
+![image](https://github.com/user-attachments/assets/268ae421-4b06-41d9-b4d7-683449a71ff0)
+![image](https://github.com/user-attachments/assets/933be02a-19c2-4742-a92e-e34ad15eb87a)
+![image](https://github.com/user-attachments/assets/72889cdb-e6a3-4e08-a25f-21dbe8b2da02)
+![image](https://github.com/user-attachments/assets/a1a109b5-d519-49cd-b1e8-11ce705ce92a)
+
 ## Getting Started
 
 ### Prerequisites
